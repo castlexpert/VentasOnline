@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "..", ".env") });
 
 const schema = /^[A-Za-z_][A-Za-z0-9_]*$/.test(process.env.DB_SCHEMA || "")
   ? process.env.DB_SCHEMA

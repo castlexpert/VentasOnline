@@ -55,9 +55,15 @@ async function seed() {
   initModels(sequelize);
   await sequelize.authenticate();
 
-  const hash = await bcrypt.hash("concretera1234", SALT);
+  const adminUser = (process.env.ADMIN_USER || "admin").trim();
+  const adminPassword = process.env.ADMIN_PASSWORD || "change-me";
+  if (adminPassword.length < 6) {
+    throw new Error("ADMIN_PASSWORD must be at least 6 characters");
+  }
+
+  const hash = await bcrypt.hash(adminPassword, SALT);
   await UserAdmin.upsert({
-    user: "ADMIN",
+    user: adminUser,
     password: hash,
     name: "Administrador",
     apellido1: "Sistema",
@@ -68,6 +74,8 @@ async function seed() {
     ind_tip_user: "LOCAL",
     ind_status: "ACTIVO"
   });
+  // eslint-disable-next-line no-console
+  console.log(`Admin user upserted: ${adminUser}`);
 
   const existingCats = await ProductCategory.count();
   if (existingCats > 0) {
