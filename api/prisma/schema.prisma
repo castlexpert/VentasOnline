@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  body      Json
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@map("w1_page")
+}
+
+model Plant {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  phone     String
+  email     String
+  createdAt DateTime @default(now())
+
+  @@map("w1_plant")
+}
+
+model HousingModel {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  heroImage   String?
+  createdAt   DateTime @default(now())
+
+  @@map("w1_housing_model")
+}
+
+model ProductCategory {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+
+  @@map("w1_product_category")
+}
+
+model Product {
+  id          String          @id @default(cuid())
+  name        String
+  slug        String          @unique
+  description String?
+  body        Json?
+  categoryId  String
+  category    ProductCategory @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime        @default(now())
+
+  @@map("w1_product")
+}
+
+model QuoteRequest {
+  id           String   @id @default(cuid())
+  fullName     String
+  idNumber     String
+  phone        String
+  email        String
+  address      String
+  plant        String
+  productType  String
+  message      String
+  status       String   @default("new")
+  createdAt    DateTime @default(now())
+
+  @@map("w1_quote_request")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  sessionId String
+  role      String
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([sessionId, createdAt])
+  @@map("w1_chat_message")
+}
+

@@ -1,0 +1,12 @@
+node_modules
+.env
+dist
+.DS_Store
+
+web/dist
+api/dist
+
+**/.vite
+**/.turbo
+**/.cache
+
